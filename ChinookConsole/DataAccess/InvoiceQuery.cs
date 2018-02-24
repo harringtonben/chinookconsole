@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChinookConsole.DataAccess.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -12,7 +13,7 @@ namespace ChinookConsole.DataAccess
     {
         readonly string _connectionString = ConfigurationManager.ConnectionStrings["Chinook"].ConnectionString;
 
-        public List<Employee> GetInvoicesBySalesRep()
+        public List<SalesRep> GetInvoicesBySalesRep()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -25,11 +26,11 @@ namespace ChinookConsole.DataAccess
                 connection.Open();
                 var reader = cmd.ExecuteReader();
 
-                var employees = new List<Employee>();
+                var employees = new List<SalesRep>();
 
                 while (reader.Read())
                 {
-                    var employee = new Employee
+                    var employee = new SalesRep
                     {
                         Name = reader["Name"].ToString(),
                         InvoiceId = int.Parse(reader["InvoiceId"].ToString())
@@ -40,11 +41,46 @@ namespace ChinookConsole.DataAccess
                 return employees;
             }
         }
+
+        public List<InvoiceData> GetInvoiceDetails()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = @"select i.Total, e.firstname + ' ' + e.lastname as [Sales Agent], i.BillingCountry, c.FirstName + ' ' +                        c.LastName as [Customer Name] 
+                                    from Employee e
+                                    join customer c on c.SupportRepId = e.EmployeeId
+                                    join invoice i on i.CustomerId = c.CustomerId
+                                    where e.title = 'Sales Support Agent'";
+
+                connection.Open();
+                var reader = cmd.ExecuteReader();
+
+                var invoiceData = new List<InvoiceData>();
+
+                while (reader.Read())
+                {
+                    var invoice = new InvoiceData
+                    {
+                        Total = double.Parse(reader["Total"].ToString()),
+                        SalesAgent = reader["Sales Agent"].ToString(),
+                        BillingCountry = reader["BillingCountry"].ToString(),
+                        CustomerName = reader["Customer Name"].ToString()
+                    };
+
+                    invoiceData.Add(invoice);
+                }
+
+                return invoiceData;
+            }
+        }
     }
 
-    internal class Employee
+    public class InvoiceData
     {
-        public string Name { get; set; }
-        public int InvoiceId { get; set; }
+        public double Total { get; set; }
+        public string SalesAgent {get; set;}
+        public string BillingCountry { get; set; }
+        public string CustomerName { get; set; }
     }
 }

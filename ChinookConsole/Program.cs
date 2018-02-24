@@ -32,12 +32,20 @@ namespace ChinookConsole
         {
             var invoiceQuery = new InvoiceQuery();
             var invoices = invoiceQuery.GetInvoicesBySalesRep();
+            var invoiceDetails = invoiceQuery.GetInvoiceDetails();
 
             Console.WriteLine("Here are all of the invoice IDs associated with their sales reps");
 
             foreach (var invoice in invoices)
             {
-                Console.WriteLine($"Sales Rep: {invoice.Name} Invoice ID: {invoice.InvoiceId}");
+                Console.WriteLine($"Sales Rep: {invoice.Name}, Invoice ID: {invoice.InvoiceId}");
+            }
+
+            Console.WriteLine("Here are all of the invoices with their totals, and some other shit");
+
+            foreach (var detail in invoiceDetails)
+            {
+                Console.WriteLine($"Total: {detail.Total}, Sales Rep: {detail.SalesAgent}, Billing Country: {detail.BillingCountry}, Customer Name: {detail.CustomerName}");
             }
 
             Console.ReadLine();
