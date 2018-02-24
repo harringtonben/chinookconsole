@@ -75,12 +75,4 @@ namespace ChinookConsole.DataAccess
             }
         }
     }
-
-    public class InvoiceData
-    {
-        public double Total { get; set; }
-        public string SalesAgent {get; set;}
-        public string BillingCountry { get; set; }
-        public string CustomerName { get; set; }
-    }
 }
