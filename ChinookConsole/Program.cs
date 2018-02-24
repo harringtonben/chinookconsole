@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChinookConsole.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,17 @@ namespace ChinookConsole
     {
         static void Main(string[] args)
         {
+            var invoiceQuery = new InvoiceQuery();
+            var invoices = invoiceQuery.GetInvoicesBySalesRep();
+
+            Console.WriteLine("Here are all of the invoice IDs associated with their sales reps");
+
+            foreach (var invoice in invoices)
+            {
+                Console.WriteLine($"Sales Rep: {invoice.Name} Invoice ID: {invoice.InvoiceId}");
+            }
+
+            Console.ReadLine();
 
         }
     }
