@@ -48,7 +48,7 @@ namespace ChinookConsole.DataAccess
                 var invoiceId = invoiceQuery.GetLastInvoice() + 1;
                 var newCustomerId = invoiceQuery.GetLastCustomerId() + 1;
 
-                var addressInfo = ParseAddressInfo(billingAddress);
+                string[] addressInfo = ParseAddressInfo(billingAddress);
 
                 var InvoiceData = InvoiceInfo(addressInfo);
 
@@ -93,27 +93,24 @@ namespace ChinookConsole.DataAccess
         InvoiceData InvoiceInfo(string[] addressString)
         {
             var addressInfo = new InvoiceData();
-            var counter = 0;
-            foreach (var item in addressString.Reverse())
+
+            for (int item = 0; item < addressString.Count(); item++)
             {
-                if (counter == 0)
+                if (item == 0)
                 {
-                    addressInfo.BillingPostalCode = item;
-                    counter++;
+                    addressInfo.BillingPostalCode = addressString[item];
                 }
-                if (counter == 1)
+                if (item == 1)
                 {
-                    addressInfo.BillingState = item;
-                    counter++;
+                    addressInfo.BillingState = addressString[item];
                 }
-                if (counter == 2)
+                if (item == 2)
                 {
-                    addressInfo.BillingCity = item;
-                    counter++;
+                    addressInfo.BillingCity = addressString[item];
                 }
-                if (counter >= 3)
+                if (item >= 3)
                 {
-                    addressInfo.BillingAddress += item + " ";
+                    addressInfo.BillingAddress += addressString[item] + " ";
                 }
             }
 
