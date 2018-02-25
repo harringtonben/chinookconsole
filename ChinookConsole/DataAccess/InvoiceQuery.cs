@@ -110,5 +110,20 @@ namespace ChinookConsole.DataAccess
                 return lastInvoiceId;
             }
         }
+
+        public int GetLastCustomerId()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = @"SELECT TOP 1 CustomerId FROM invoice ORDER BY CustomerId DESC";
+
+                connection.Open();
+
+                var lastCustomerId = (int)cmd.ExecuteScalar();
+
+                return lastCustomerId;
+            }
+        }
     }
 }
