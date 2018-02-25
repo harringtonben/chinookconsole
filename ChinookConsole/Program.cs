@@ -57,8 +57,10 @@ namespace ChinookConsole
 
             Console.WriteLine("Please enter your address to create a new invoice.");
             var userAddress = Console.ReadLine();
+            Console.WriteLine("What is the customerID for this invoice?");
+            var customerID = Console.ReadLine();
             var invoiceModifier = new InvoiceModifier();
-            var createInvoice = invoiceModifier.AddNewInvoice(userAddress);
+            var createInvoice = invoiceModifier.AddNewInvoice(userAddress, int.Parse(customerID));
             if (createInvoice)
             {
                 Console.WriteLine("Congratulations, you created a new invoice!");

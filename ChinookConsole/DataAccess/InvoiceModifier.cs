@@ -15,7 +15,7 @@ namespace ChinookConsole.DataAccess
     {
         readonly string _connectionString = ConfigurationManager.ConnectionStrings["Chinook"].ConnectionString;
 
-        public bool AddNewInvoice(string billingAddress)
+        public bool AddNewInvoice(string billingAddress, int inputCustomerId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -46,9 +46,8 @@ namespace ChinookConsole.DataAccess
                 var invoiceQuery = new InvoiceQuery();
 
                 var invoiceId = invoiceQuery.GetLastInvoice() + 1;
-                var newCustomerId = invoiceQuery.GetLastCustomerId() + 1;
 
-                string[] addressInfo = ParseAddressInfo(billingAddress);
+                string[] addressInfo = ParseAddressInfo(billingAddress).Reverse().ToArray();
 
                 var InvoiceData = InvoiceInfo(addressInfo);
 
@@ -57,11 +56,12 @@ namespace ChinookConsole.DataAccess
                 cmd.Parameters.Add(newInvoiceId);
 
                 var customerId = new SqlParameter("@customerId", SqlDbType.Int);
-                customerId.Value = newCustomerId;
+                customerId.Value = inputCustomerId;
                 cmd.Parameters.Add(customerId);
 
                 var billingAddy = new SqlParameter("@billingAddress", SqlDbType.NVarChar);
-                billingAddy.Value = InvoiceData.BillingAddress;
+                var billingValue = InvoiceData.BillingAddress;
+                billingAddy.Value = billingValue;
                 cmd.Parameters.Add(billingAddy);
 
                 var billingCity = new SqlParameter("@billingCity", SqlDbType.NVarChar);
@@ -113,6 +113,10 @@ namespace ChinookConsole.DataAccess
                     addressInfo.BillingAddress += addressString[item] + " ";
                 }
             }
+
+            string[] rightSideAddress = ParseAddressInfo(addressInfo.BillingAddress).Reverse().ToArray();
+            var correctAddress = String.Join(" ", rightSideAddress);
+            addressInfo.BillingAddress = correctAddress;
 
             return addressInfo;
         }
