@@ -48,6 +48,11 @@ namespace ChinookConsole
                 Console.WriteLine($"Total: {detail.Total}, Sales Rep: {detail.SalesAgent}, Billing Country: {detail.BillingCountry}, Customer Name: {detail.CustomerName}");
             }
 
+
+            Console.WriteLine("Please enter in an invoice ID to see the total number of line items for that invoice.");
+            var invoiceInput = Console.ReadLine();
+            var lineItems = invoiceQuery.GetInvoiceLineItems(int.Parse(invoiceInput));
+            Console.WriteLine($"There are {lineItems} line items for invoice ID {invoiceInput}");
             Console.ReadLine();
 
         }

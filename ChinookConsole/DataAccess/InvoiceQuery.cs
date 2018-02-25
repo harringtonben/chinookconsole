@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -72,6 +73,26 @@ namespace ChinookConsole.DataAccess
                 }
 
                 return invoiceData;
+            }
+        }
+
+        public int GetInvoiceLineItems(int invoiceIdInput)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = @"select count(*) as [Total Number of Line Items] from InvoiceLine
+                                    where InvoiceId = @invoiceId";
+
+                var invoiceId = new SqlParameter("@invoiceId", SqlDbType.Int);
+                invoiceId.Value = invoiceIdInput;
+                cmd.Parameters.Add(invoiceId);
+
+                connection.Open();
+
+                var invoiceLineCount = (int)cmd.ExecuteScalar();
+
+                return invoiceLineCount;
             }
         }
     }
