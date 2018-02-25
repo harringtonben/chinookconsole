@@ -53,8 +53,18 @@ namespace ChinookConsole
             var invoiceInput = Console.ReadLine();
             var lineItems = invoiceQuery.GetInvoiceLineItems(int.Parse(invoiceInput));
             Console.WriteLine($"There are {lineItems} line items for invoice ID {invoiceInput}");
-            Console.ReadLine();
+            
 
+            Console.WriteLine("Please enter your address to create a new invoice.");
+            var userAddress = Console.ReadLine();
+            var invoiceModifier = new InvoiceModifier();
+            var createInvoice = invoiceModifier.AddNewInvoice(userAddress);
+            if (createInvoice)
+            {
+                Console.WriteLine("Congratulations, you created a new invoice!");
+            }
+
+            Console.ReadLine();
         }
     }
 }

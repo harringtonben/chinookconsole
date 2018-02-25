@@ -116,7 +116,7 @@ namespace ChinookConsole.DataAccess
             using (var connection = new SqlConnection(_connectionString))
             {
                 var cmd = connection.CreateCommand();
-                cmd.CommandText = @"SELECT TOP 1 CustomerId FROM invoice ORDER BY CustomerId DESC";
+                cmd.CommandText = @"SELECT TOP 1 CustomerId FROM customer ORDER BY CustomerId DESC";
 
                 connection.Open();
 

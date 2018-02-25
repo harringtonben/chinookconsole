@@ -15,7 +15,7 @@ namespace ChinookConsole.DataAccess
     {
         readonly string _connectionString = ConfigurationManager.ConnectionStrings["Chinook"].ConnectionString;
 
-        bool AddNewInvoice(string billingAddress)
+        public bool AddNewInvoice(string billingAddress)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -93,25 +93,25 @@ namespace ChinookConsole.DataAccess
         InvoiceData InvoiceInfo(string[] addressString)
         {
             var addressInfo = new InvoiceData();
-            var counter = 1;
-            foreach (var item in addressString)
+            var counter = 0;
+            foreach (var item in addressString.Reverse())
             {
-                if (counter == 1)
+                if (counter == 0)
                 {
                     addressInfo.BillingPostalCode = item;
                     counter++;
                 }
-                if (counter == 2)
+                if (counter == 1)
                 {
                     addressInfo.BillingState = item;
                     counter++;
                 }
-                if (counter == 3)
+                if (counter == 2)
                 {
                     addressInfo.BillingCity = item;
                     counter++;
                 }
-                else
+                if (counter >= 3)
                 {
                     addressInfo.BillingAddress += item + " ";
                 }
