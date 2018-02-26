@@ -66,6 +66,17 @@ namespace ChinookConsole
                 Console.WriteLine("Congratulations, you created a new invoice!");
             }
 
+            Console.WriteLine("Please enter the Employee ID whose name you would like to change.");
+            var employeeId = Console.ReadLine();
+            Console.WriteLine("What would you like to change their name to?");
+            var newName = Console.ReadLine();
+            var employeeModifier = new EmployeeModifier();
+            var changeName = employeeModifier.UpdateEmployee(int.Parse(employeeId), newName);
+            if (changeName)
+            {
+                Console.WriteLine($"Congratulations, you updated the name of employee ID {employeeId} to {newName}!");
+            }
+
             Console.ReadLine();
         }
     }
