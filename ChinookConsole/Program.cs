@@ -30,56 +30,91 @@ namespace ChinookConsole
     {
         static void Main(string[] args)
         {
-            var invoiceQuery = new InvoiceQuery();
-            var invoices = invoiceQuery.GetInvoicesBySalesRep();
-            var invoiceDetails = invoiceQuery.GetInvoiceDetails();
-
-            Console.WriteLine("Here are all of the invoice IDs associated with their sales reps");
-
-            foreach (var invoice in invoices)
+            var run = true;
+            while (run)
             {
-                Console.WriteLine($"Sales Rep: {invoice.Name}, Invoice ID: {invoice.InvoiceId}");
+                ConsoleKeyInfo userInput = MainMenu();
+
+                switch (userInput.KeyChar)
+                {
+                    case '0':
+                        run = false;
+                        break;
+                    case '1':
+                        Console.Clear();
+                        var invoiceQuery = new InvoiceQuery();
+
+                        var invoices = invoiceQuery.GetInvoicesBySalesRep();
+                        var invoiceDetails = invoiceQuery.GetInvoiceDetails();
+
+                        Console.WriteLine("Here are all of the invoice IDs associated with their sales reps");
+
+                        foreach (var invoice in invoices)
+                        {
+                            Console.WriteLine($"Sales Rep: {invoice.Name}, Invoice ID: {invoice.InvoiceId}");
+                        }
+                        Console.WriteLine("press enter to continue.");
+                        Console.ReadLine();
+                        break;
+                    case '2':
+                        Console.Clear();
+                        Console.WriteLine("Here are all of the invoices with their totals, and some other shit");
+
+                        invoiceQuery = new InvoiceQuery();
+                        invoices = invoiceQuery.GetInvoicesBySalesRep();
+                        invoiceDetails = invoiceQuery.GetInvoiceDetails();
+
+                        foreach (var detail in invoiceDetails)
+                        {
+                            Console.WriteLine($"Total: {detail.Total}, Sales Rep: {detail.SalesAgent}, Billing Country: {detail.BillingCountry}, Customer Name: {detail.CustomerName}");
+                        }
+                        Console.WriteLine("press enter to continue.");
+                        Console.ReadLine();
+                        break;
+                    case '3':
+                        Console.Clear();
+                        Console.WriteLine("Please enter in an invoice ID to see the total number of line items for that invoice.");
+                        var invoiceInput = Console.ReadLine();
+                        invoiceQuery = new InvoiceQuery();
+                        var lineItems = invoiceQuery.GetInvoiceLineItems(int.Parse(invoiceInput));
+                        Console.WriteLine($"There are {lineItems} line items for invoice ID {invoiceInput}");
+                        Console.WriteLine("press enter to continue.");
+                        Console.ReadLine();
+                        break;
+                    case '4':
+                        Console.Clear();
+                        Console.WriteLine("Please enter your address to create a new invoice.");
+                        var userAddress = Console.ReadLine();
+                        Console.WriteLine("What is the customerID for this invoice?");
+                        var customerID = Console.ReadLine();
+                        var invoiceModifier = new InvoiceModifier();
+                        var createInvoice = invoiceModifier.AddNewInvoice(userAddress, int.Parse(customerID));
+                        if (createInvoice)
+                        {
+                            Console.WriteLine("Congratulations, you created a new invoice!");
+                        }
+                        Console.WriteLine("press enter to continue.");
+                        Console.ReadLine();
+                        break;
+                    case '5':
+                        Console.Clear();
+                        Console.WriteLine("Please enter the Employee ID whose name you would like to change.");
+                        var employeeId = Console.ReadLine();
+                        Console.WriteLine("What would you like to change their name to?");
+                        var newName = Console.ReadLine();
+                        var employeeModifier = new EmployeeModifier();
+                        var changeName = employeeModifier.UpdateEmployee(int.Parse(employeeId), newName);
+                        if (changeName)
+                        {
+                            Console.WriteLine($"Congratulations, you updated the name of employee ID {employeeId} to {newName}!");
+                        }
+                        Console.WriteLine("press enter to continue.");
+                        Console.ReadLine();
+                        break;
+                }
             }
 
-            Console.WriteLine("Here are all of the invoices with their totals, and some other shit");
-
-            foreach (var detail in invoiceDetails)
-            {
-                Console.WriteLine($"Total: {detail.Total}, Sales Rep: {detail.SalesAgent}, Billing Country: {detail.BillingCountry}, Customer Name: {detail.CustomerName}");
-            }
-
-
-            Console.WriteLine("Please enter in an invoice ID to see the total number of line items for that invoice.");
-            var invoiceInput = Console.ReadLine();
-            var lineItems = invoiceQuery.GetInvoiceLineItems(int.Parse(invoiceInput));
-            Console.WriteLine($"There are {lineItems} line items for invoice ID {invoiceInput}");
-            
-
-            Console.WriteLine("Please enter your address to create a new invoice.");
-            var userAddress = Console.ReadLine();
-            Console.WriteLine("What is the customerID for this invoice?");
-            var customerID = Console.ReadLine();
-            var invoiceModifier = new InvoiceModifier();
-            var createInvoice = invoiceModifier.AddNewInvoice(userAddress, int.Parse(customerID));
-            if (createInvoice)
-            {
-                Console.WriteLine("Congratulations, you created a new invoice!");
-            }
-
-            Console.WriteLine("Please enter the Employee ID whose name you would like to change.");
-            var employeeId = Console.ReadLine();
-            Console.WriteLine("What would you like to change their name to?");
-            var newName = Console.ReadLine();
-            var employeeModifier = new EmployeeModifier();
-            var changeName = employeeModifier.UpdateEmployee(int.Parse(employeeId), newName);
-            if (changeName)
-            {
-                Console.WriteLine($"Congratulations, you updated the name of employee ID {employeeId} to {newName}!");
-            }
-
-            Console.ReadLine();
-
-            static ConsoleKeyInfo MainMenu()
+            ConsoleKeyInfo MainMenu()
             {
                 View mainMenu = new View()
                         .AddMenuOption("Show invoices associated with each sales agent.")
