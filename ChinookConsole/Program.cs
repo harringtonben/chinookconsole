@@ -78,6 +78,21 @@ namespace ChinookConsole
             }
 
             Console.ReadLine();
+
+            static ConsoleKeyInfo MainMenu()
+            {
+                View mainMenu = new View()
+                        .AddMenuOption("Show invoices associated with each sales agent.")
+                        .AddMenuOption("See invoice data for all invoices.")
+                        .AddMenuOption("See number of invoice line items for each invoice.")
+                        .AddMenuOption("Add anew invoice.")
+                        .AddMenuOption("Update an employee name.")
+                        .AddMenuText("Press 0 to exit.");
+
+                Console.Write(mainMenu.GetFullMenu());
+                ConsoleKeyInfo userOption = Console.ReadKey();
+                return userOption;
+            }
         }
     }
 }
